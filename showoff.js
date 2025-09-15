@@ -31,12 +31,12 @@
       '— sunset/sunrise obsessed',
       '— spotify is my best friend',
       '— have watched my favourite movie yjhd over 12986743 times',
-      '— maker of interactive, human stories',
-      '— obsessed with type, grids & motion',
-      '— building apps like moodbook & pulsetrack',
+      '— started off as a canva designer',
+      '— obsessed with beach holidays',
+      '— loves thai food',
       '— beach chaser',
       '— will do anything to get on the next flight and explore a new place',
-      '— dean’s list; community-driven collaborator'
+      '— have two birth marks'
     ];
     let factIndex = 0;
     function nextFact(){ const s = orderedFacts[factIndex % orderedFacts.length]; factIndex++; return s; }
