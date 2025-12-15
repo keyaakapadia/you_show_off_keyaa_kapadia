@@ -3,14 +3,14 @@
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
 
-  // all-pink palette for the game area
+  // PINK-ONLY palette
   const P = {
-    bgGrid: '#ffb0d4',                    // mid-tone pink grid
-    shades: ['#ffe6f4','#ffd7ee','#ffc1e3','#ff9acc','#ff6aa9'], // bricks light → dark pink
+    bgGrid: '#ffb0d4',                                  // mid-tone pink grid
+    shades: ['#ffe6f4','#ffd2ec','#ffb8df','#ff94c8','#ff6aa9'], // bricks: baby → dark pink
     paddleDark: '#f5a4c7',
     paddleLight: '#ffe3f3',
     ball: '#ffe6f4',
-    trail: '#ffd7ee',
+    trail: '#ffd2ec',
     factLight: '#c8548a',
     factBorder: '#ffb0d4'
   };
@@ -88,10 +88,9 @@
       for(let c=0;c<COLS;c++){
         let startShade;
         if(level===1){
-          // random baby-pink start for level 1
-          startShade = Math.random() < 0.5 ? 0 : 2;
+          startShade = 0;                      // easiest: baby pink
         } else {
-          // higher rows slightly darker on later levels
+          // higher rows slightly darker as level increases
           startShade = Math.max(0, Math.min(P.shades.length-2, (ROWS-1-r)));
         }
         const maxShade = P.shades.length-1;
@@ -225,7 +224,7 @@
       if(d.type==='fact'){
         const g = ctx.createLinearGradient(d.x, d.y, d.x, d.y+d.h);
         g.addColorStop(0, '#ffe6f4');
-        g.addColorStop(1, '#ffd7ee');
+        g.addColorStop(1, '#ffd2ec');
         ctx.fillStyle = g;
         ctx.strokeStyle = P.factBorder;
         roundRect(d.x, d.y, d.w, d.h, 8); ctx.fill(); ctx.stroke();
