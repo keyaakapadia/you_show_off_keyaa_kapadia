@@ -3,17 +3,16 @@
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
 
-  // soft-girl color palette for the game area
+  // all-pink palette for the game area
   const P = {
-    bgGrid: '#eadfff',
-    // bricks go to white, with tiny lilac variation
-    shades: ['#f3e8ff','#f7efff','#fbf6ff','#fdfbff','#ffffff'],
-    paddleDark: '#e0c7ff',
-    paddleLight: '#fbe8ff',
-    ball: '#ffffff',
-    trail: '#f0e2ff',
-    factLight: '#a06fbf',
-    factBorder: '#e4c5ff'
+    bgGrid: '#ffb0d4',                    // mid-tone pink grid
+    shades: ['#ffe6f4','#ffd7ee','#ffc1e3','#ff9acc','#ff6aa9'], // bricks light → dark pink
+    paddleDark: '#f5a4c7',
+    paddleLight: '#ffe3f3',
+    ball: '#ffe6f4',
+    trail: '#ffd7ee',
+    factLight: '#c8548a',
+    factBorder: '#ffb0d4'
   };
 
   const baseSentence = '';
@@ -88,8 +87,13 @@
     for(let r=0;r<ROWS;r++){
       for(let c=0;c<COLS;c++){
         let startShade;
-        if(level===1){ startShade = Math.random() < 0.5 ? 0 : (Math.random()<0.5?3:4); }
-        else { startShade = Math.max(0, Math.min(P.shades.length-2, (ROWS-1-r))); }
+        if(level===1){
+          // random baby-pink start for level 1
+          startShade = Math.random() < 0.5 ? 0 : 2;
+        } else {
+          // higher rows slightly darker on later levels
+          startShade = Math.max(0, Math.min(P.shades.length-2, (ROWS-1-r)));
+        }
         const maxShade = P.shades.length-1;
         const stepsToBreak = (maxShade - startShade) + 1;
         bricks.push({
@@ -164,6 +168,7 @@
   function drawGrid(){
     ctx.save();
     ctx.strokeStyle = P.bgGrid;
+    ctx.globalAlpha = 0.35;
     ctx.lineWidth = 1;
     for(let y=GRID_OFFSET.y-20;y<H-80;y+=20){
       ctx.beginPath(); ctx.moveTo(40,y); ctx.lineTo(W-40,y); ctx.stroke();
@@ -171,6 +176,7 @@
     for(let x=40;x<W-40;x+=20){
       ctx.beginPath(); ctx.moveTo(x, GRID_OFFSET.y-20); ctx.lineTo(x, H-80); ctx.stroke();
     }
+    ctx.globalAlpha = 1;
     ctx.restore();
   }
 
@@ -180,11 +186,11 @@
       const shadeIdx = Math.min(b.startShade + b.step, P.shades.length-1);
       const col = P.shades[shadeIdx];
       const g = ctx.createLinearGradient(b.x, b.y, b.x, b.y+b.h);
-      g.addColorStop(0, shade(col, 6));
-      g.addColorStop(1, shade(col, -4));
+      g.addColorStop(0, shade(col, 8));
+      g.addColorStop(1, shade(col, -6));
       ctx.fillStyle = g;
       roundRect(b.x, b.y, b.w, b.h, 5); ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,.45)';
+      ctx.fillStyle = 'rgba(255,255,255,.55)';
       roundRect(b.x+2, b.y+2, b.w-4, 5, 3); ctx.fill();
     });
   }
@@ -196,7 +202,7 @@
     g.addColorStop(1,P.paddleDark);
     ctx.fillStyle=g;
     roundRect(x,y,w,h,8); ctx.fill();
-    ctx.fillStyle='rgba(255,255,255,.55)';
+    ctx.fillStyle='rgba(255,255,255,.6)';
     roundRect(x+2,y+2,w-4,4,6); ctx.fill();
   }
 
@@ -218,8 +224,8 @@
       if(d.caught || d.dead) return;
       if(d.type==='fact'){
         const g = ctx.createLinearGradient(d.x, d.y, d.x, d.y+d.h);
-        g.addColorStop(0, '#f5e6ff');
-        g.addColorStop(1, '#fbefff');
+        g.addColorStop(0, '#ffe6f4');
+        g.addColorStop(1, '#ffd7ee');
         ctx.fillStyle = g;
         ctx.strokeStyle = P.factBorder;
         roundRect(d.x, d.y, d.w, d.h, 8); ctx.fill(); ctx.stroke();
@@ -232,12 +238,12 @@
         ctx.save();
         ctx.translate(d.x + d.w/2, d.y + d.h/2);
         ctx.rotate(Math.PI/4);
-        ctx.fillStyle='rgba(244,194,255,.18)';
-        ctx.strokeStyle='#f4c2ff';
+        ctx.fillStyle='rgba(255,176,212,.22)';
+        ctx.strokeStyle='#ff8abf';
         ctx.lineWidth=2;
         roundRect(-12,-12,24,24,4); ctx.stroke(); ctx.fill();
         ctx.rotate(-Math.PI/4);
-        ctx.fillStyle='#d39bff';
+        ctx.fillStyle='#ff5c9f';
         ctx.font='16px "Inter", system-ui, -apple-system, sans-serif';
         ctx.textAlign='center';
         ctx.textBaseline='middle';
@@ -422,7 +428,7 @@
     ctx.clearRect(0,0,W,H);
 
     ctx.save();
-    ctx.strokeStyle = '#e4d4ff';
+    ctx.strokeStyle = '#ffcfe5';
     ctx.lineWidth = 2;
     roundRect(20, 60, W-40, H-120, 12);
     ctx.stroke();
@@ -434,7 +440,7 @@
     drawBalls();
     drawDrops();
 
-    ctx.fillStyle = '#b58cff';
+    ctx.fillStyle = '#c8548a';
     ctx.font = '12px "Inter", system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'left';
     ctx.fillText(`Score ${score}`, 28, 48);
@@ -444,18 +450,18 @@
     ctx.fillText(`Level ${level}`, W-28, 48);
 
     if(!playing && !gameOver){
-      ctx.fillStyle = 'rgba(245,230,255,0.95)';
+      ctx.fillStyle = 'rgba(255,230,245,0.96)';
       roundRect(40, 140, W-80, 90, 10); ctx.fill();
-      ctx.fillStyle = '#a06fbf';
+      ctx.fillStyle = '#c8548a';
       ctx.textAlign='center';
       ctx.font = '20px "Inter", system-ui, -apple-system, sans-serif';
       ctx.fillText('click / tap to launch', W/2, 190);
     }
 
     if(gameOver){
-      ctx.fillStyle = 'rgba(245,230,255,0.98)';
+      ctx.fillStyle = 'rgba(255,230,245,0.98)';
       roundRect(60, 120, W-120, 200, 12); ctx.fill();
-      ctx.fillStyle = '#a06fbf';
+      ctx.fillStyle = '#c8548a';
       ctx.textAlign='center';
       ctx.font = '22px "Inter", system-ui, -apple-system, sans-serif';
       ctx.fillText('Game Over — Well Played', W/2, 165);
