@@ -197,7 +197,7 @@ canvas{
   padding:8px 12px 12px;
 }
 
-/* subtle personality shimmer for identity line */
+/* identity line */
 #identityLine{
   font-size:14px;
   max-width:760px;
@@ -207,17 +207,6 @@ canvas{
   text-shadow:0 0 10px rgba(247,198,255,.25);
   font-weight:300;
 }
-
-/* optional shimmer
-@keyframes identityShimmer{
-  0%{opacity:.9; text-shadow:0 0 6px rgba(247,198,255,.18);}
-  50%{opacity:1; text-shadow:0 0 18px rgba(247,198,255,.45);}
-  100%{opacity:.9; text-shadow:0 0 6px rgba(247,198,255,.18);}
-}
-#identityLine{
-  animation:identityShimmer 5s ease-in-out infinite;
-}
-*/
 
 .chips{
   display:flex;
